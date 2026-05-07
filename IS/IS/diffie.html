@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diffie-Hellman Key Exchange</title>
+</head>
+<body>
+
+<h2>Diffie-Hellman Key Exchange</h2>
+
+<label>Enter Prime Number (p): </label>
+<input type="number" id="p"><br><br>
+
+<label>Enter Primitive Root (g): </label>
+<input type="number" id="g"><br><br>
+
+<label>Enter your Private Key (Alice): </label>
+<input type="number" id="a"><br><br>
+
+<button onclick="calculate()">Generate Shared Key</button>
+
+<h3>Results:</h3>
+<p id="result"></p>
+
+<script>
+// Modular exponentiation
+function modExp(base, exp, mod) {
+    let result = 1;
+    base = base % mod;
+
+    while (exp > 0) {
+        if (exp % 2 === 1)
+            result = (result * base) % mod;
+
+        exp = Math.floor(exp / 2);
+        base = (base * base) % mod;
+    }
+    return result;
+}
+
+function calculate() {
+    let p = parseInt(document.getElementById("p").value);
+    let g = parseInt(document.getElementById("g").value);
+    let a = parseInt(document.getElementById("a").value);
+
+    // Bob's private key (random)
+    let b = Math.floor(Math.random() * 10) + 1;
+
+    // Public keys
+    let A = modExp(g, a, p);
+    let B = modExp(g, b, p);
+
+    // Shared keys
+    let keyAlice = modExp(B, a, p);
+    let keyBob = modExp(A, b, p);
+
+    document.getElementById("result").innerHTML =
+        "Bob's Private Key: " + b + "<br>" +
+        "Alice's Public Key (A): " + A + "<br>" +
+        "Bob's Public Key (B): " + B + "<br>" +
+        "Shared Key (Alice): " + keyAlice + "<br>" +
+        "Shared Key (Bob): " + keyBob;
+}
+</script>
+
+</body>
+</html>
